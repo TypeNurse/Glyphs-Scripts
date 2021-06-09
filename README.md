@@ -8,8 +8,8 @@ Python scripts for Glyphs font editor. Should be compatible with both version 2 
 * **Set Kerning Groups for Composite Glyphs:** Sets missing kerning groups for selected composite glyphs based on included components (ignoring marks). Also works for ligatures.
 
 ## Glyph Properties
-* **Lock/Unlock Glyphs:** Locks or unlocks selected glyphs, resulting in the same lock state for the entire selection. *Recommended shortcut: ⌘L*
-* **Toggle Glyph Lock:** Toggles the lock state for selected glyphs. Unlike the above, the lock state if not harmonized across the selection. *Recommended shortcut: ⌥⌘L*
+* **Lock/Unlock Glyphs:** Locks or unlocks selected glyphs, resulting in the same lock state for the entire selection. *Recommended shortcut:* ⌘L
+* **Toggle Glyph Lock:** Toggles the lock state for selected glyphs. Unlike the above, the lock state if not harmonized across the selection. *Recommended shortcut:* ⌥⌘L
 * **Swap Glyph Names:** Exchanges the names of two selected glyphs. All other glyph data remains unchanged.
 
 ## Other
