@@ -11,3 +11,6 @@ selection[0].parent.locked = firstLayerLock
 
 for layer in selection[1:]:
 	layer.parent.locked = firstLayerLock
+
+if Font.currentTab:
+	Font.currentTab.redraw()
