@@ -6,3 +6,7 @@ Toggle the lock state for selected glyphs.
 
 for layer in Font.selectedLayers:
 	layer.parent.locked = not layer.parent.locked
+
+if Font.currentTab:
+	Font.currentTab.redraw()
+	
