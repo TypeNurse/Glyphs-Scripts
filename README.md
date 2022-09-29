@@ -3,7 +3,8 @@ Python scripts for Glyphs font editor. Should be compatible with both version 2 
 
 ## Components and Composites
 * **Add Missing Composites for Stylistic Sets:** Add composite glyphs for letters in stylistic sets where the standard glyph is used as component. Useful to maintain consistency in glyph set when adding a new styilistic set.
-* **Make Component Smart:** Turn the selected components into smart components based on the axes defined in the font, thus making the interpolatable. Useful for e.g. small caps and ordinals, depending on your setup.
+* **Make Component Smart:** Turn (the glyphs of) the selected components into smart components based on the axes defined in the font, thus making the interpolatable. Useful for e.g. small caps and ordinals, depending on your setup.
+* **Make Component Dumb(er):** Turn (the glyphs of) the selected smart components into regular components i.e. reversing the *Make Component Smart* script.
 * **New Tab with Glyphs Using Glyph(s) as Component:** Opens a new tab with all glyphs using selected glyphs as components. Same as *”Show all glyphs that uses ...”* in Edit view, but works for multiple glyphs. Each glyphs reports on a separate line of text.
 * **Set Kerning Groups for Composite Glyphs:** Sets missing kerning groups for selected composite glyphs based on included components (ignoring marks). Also works for ligatures.
 
