@@ -1,37 +1,61 @@
-#MenuTitle: Make Component Smart
+#MenuTitle: Make Components Smart
 # -*- coding: utf-8 -*-
 __doc__="""
 Turn the selected components into smart components, based on the axes defined in the font.
 """
 
-selectedLayer = Font.selectedLayers[0]
+# clears macro window log:
+Glyphs.clearLog()
+
 processedGlyphs = []
+font = Glyphs.font
+selectedLayers = font.selectedLayers
+if len(selectedLayers) > 1:
+	batchProcess = True
+else:
+	batchProcess = False
 
-for component in selectedLayer.components:
-	if component.selected:
-		componentGlyph = Font.glyphs[component.name]
+for selectedLayer in selectedLayers:
+	selectedGlyph = selectedLayer.parent
+	print(f"Processing {selectedGlyph.name}...")
+	for compIndex, component in enumerate(selectedLayer.components):
+		if component.selected or batchProcess:
+			originalGlyph = font.glyphs[component.name]
 
-		# Check if component is already smart
-		if not componentGlyph.smartComponentAxes:
-			for i in range(len(Font.axes)):
-				axisValues = [m.axes[i] for m in Font.masters]
-				newAxis = GSSmartComponentAxis()
-				newAxis.name = Font.axes[i].name
-				newAxis.bottomValue = min(axisValues)
-				newAxis.topValue = max(axisValues)
-				componentGlyph.smartComponentAxes.append(newAxis)
-				
-				for layer in componentGlyph.layers:
-					if layer.isMasterLayer:
-						if Font.masters[layer.associatedMasterId].axes[i] == newAxis.bottomValue:
-							layer.smartComponentPoleMapping[componentGlyph.smartComponentAxes[newAxis.name].id] = 1
-						if Font.masters[layer.associatedMasterId].axes[i] == newAxis.topValue:
-							layer.smartComponentPoleMapping[componentGlyph.smartComponentAxes[newAxis.name].id] = 2
-				
-				processedGlyphs.append(componentGlyph.name)
+			# Check if component is already smart
+			if not originalGlyph.smartComponentAxes:
+				for i in range(len(font.axes)):
+					axisValues = [m.axes[i] for m in font.masters]
+					newAxis = GSSmartComponentAxis()
+					newAxis.name = font.axes[i].name
+					# newAxis.axisTag = font.axes[i].axisTag
+					newAxis.bottomValue = min(axisValues)
+					newAxis.topValue = max(axisValues)
+					originalGlyph.smartComponentAxes.append(newAxis)
+					for layer in originalGlyph.layers:
+						if layer.isMasterLayer:
+							if font.masters[layer.associatedMasterId].axes[i] == newAxis.bottomValue:
+								layer.smartComponentPoleMapping[originalGlyph.smartComponentAxes[newAxis.name].id] = 1
+							if font.masters[layer.associatedMasterId].axes[i] == newAxis.topValue:
+								layer.smartComponentPoleMapping[originalGlyph.smartComponentAxes[newAxis.name].id] = 2
+								
+			# Reset axis values, so they can be accessed:
+			for layer in selectedGlyph.layers:
+				if layer.isMasterLayer:
+					for i in range(len(font.axes)):
+						component = layer.components[compIndex]
+						interpolationValue = layer.associatedFontMaster().axes[i]
+						component.smartComponentValues[originalGlyph.smartComponentAxes[i].id] = interpolationValue
+			
+			# Renew selection in order to show smart glyph controls
+			if not batchProcess:
+				for b in range(2):
+					component.selected = bool(b)
 		
-		# Renew selection in order to show smart glyph controls
-		component.selected = False
-		component.selected = True
-		
-print('%s are now smart glyphs.' % ", ".join(processedGlyphs))
+			processedGlyphs.append(originalGlyph.name)
+
+if processedGlyphs:
+	be = "are" if len(processedGlyphs)>1 else "is"
+	print(f'{", ".join(processedGlyphs)} {be} now smart.')
+else:
+	print("No glyphs changed, make sure to select at least one component.")
